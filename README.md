@@ -1,6 +1,8 @@
 # producers #
 
-Welcome to producers!
+sometimes, you need to produce some data to your Kafka cluster quickly. This project is intended as a reference for seom of the many ways to do so
+
+* kafka-avro-console-producer
 
 ## Contribution policy ##
 
