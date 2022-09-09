@@ -44,6 +44,7 @@ lazy val producers =
         library.clients,
         library.kafka,
         library.betterFiles,
+        library.config,
         library.gson,
         library.airframeLog,
         library.logback,
@@ -74,6 +75,7 @@ lazy val library =
       val kafka = "3.2.0"
       val betterFiles = "3.9.1"
       val airframeLog = "21.12.1"
+      val config = "1.4.2"
       val gson = "2.9.0"
       val logback = "1.2.10"
       val scalatest = "3.2.10"
@@ -83,6 +85,7 @@ lazy val library =
     val kafka = "org.apache.kafka" %% "kafka" % Version.kafka
     val betterFiles = "com.github.pathikrit" %% "better-files" % Version.betterFiles
     val airframeLog = "org.wvlet.airframe" %% "airframe-log" % Version.airframeLog
+    val config = "com.typesafe" % "config" % Version.config
     val gson  = "com.google.code.gson" % "gson" % Version.gson
     val logback = "ch.qos.logback" % "logback-core" % Version.logback
     val scalatest = "org.scalatest" %% "scalatest" % Version.scalatest
