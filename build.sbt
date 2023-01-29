@@ -46,6 +46,10 @@ lazy val producers =
         library.betterFiles,
         library.config,
         library.gson,
+        library.circe,
+        library.circeGeneric,
+        library.circeParser,
+        library.circeKafka,
         library.airframeLog,
         library.logback,
         library.scalatest % Test
@@ -77,6 +81,8 @@ lazy val library =
       val airframeLog = "21.12.1"
       val config = "1.4.2"
       val gson = "2.9.0"
+      val circeKafka        = "3.1.0"
+      val circe = "0.14.2"
       val logback = "1.2.10"
       val scalatest = "3.2.10"
     }
@@ -87,6 +93,10 @@ lazy val library =
     val airframeLog = "org.wvlet.airframe" %% "airframe-log" % Version.airframeLog
     val config = "com.typesafe" % "config" % Version.config
     val gson  = "com.google.code.gson" % "gson" % Version.gson
+    val circeKafka          = "com.nequissimus"         %% "circe-kafka"              % Version.circeKafka
+    val circe = "io.circe" %% "circe-core" % Version.circe
+    val circeGeneric = "io.circe" %% "circe-generic" % Version.circe
+    val circeParser = "io.circe" %% "circe-parser" % Version.circe
     val logback = "ch.qos.logback" % "logback-core" % Version.logback
     val scalatest = "org.scalatest" %% "scalatest" % Version.scalatest
   }

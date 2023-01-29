@@ -5,7 +5,7 @@
         <!-- see http://logback.qos.ch/manual/layouts.html#coloring -->
         <withJansi>true</withJansi>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
         </filter>
         <encoder>
             <pattern>[%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX", UTC}] [%thread] %highlight[%-5level] [%logger] - %msg %n</pattern>

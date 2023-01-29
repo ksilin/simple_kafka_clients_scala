@@ -21,9 +21,9 @@ class JsonProducerSpec extends SpecBase {
 
   case class MyRecord(name: String, description: String, timestamp: lang.Long)
 
-  val jsonSerializer = new GsonSerializer[MyRecord]
-  val jsonDeserializer = new GsonDeserializer[MyRecord](classOf[MyRecord])
-  val myRecordSerde: WrapperSerde[MyRecord] =   new WrapperSerde(jsonSerializer, jsonDeserializer)
+  val myRecordSerializer = new GsonSerializer[MyRecord]
+  val myRecordDeserializer = new GsonDeserializer[MyRecord](classOf[MyRecord])
+  val myRecordSerde: WrapperSerde[MyRecord] =   new WrapperSerde(myRecordSerializer, myRecordDeserializer)
 
   val prefix: String = suiteName
   val topic = s"${prefix}_testTopic"
@@ -33,9 +33,9 @@ class JsonProducerSpec extends SpecBase {
    "must produce data locally" in {
 
      val setup: ClientSetup = ClientSetup(configPath = Some("local"))
-     val producer = new KafkaProducer[String, MyRecord](setup.commonProps, Serdes.String().serializer(), jsonSerializer)
+     val producer = new KafkaProducer[String, MyRecord](setup.commonProps, Serdes.String().serializer(), myRecordSerializer)
      setup.commonProps.put(ConsumerConfig.GROUP_ID_CONFIG, cGroup)
-     val consumer = new KafkaConsumer[String, MyRecord](setup.commonProps, Serdes.String().deserializer(), jsonDeserializer)
+     val consumer = new KafkaConsumer[String, MyRecord](setup.commonProps, Serdes.String().deserializer(), myRecordDeserializer)
      consumer.subscribe(List(topic).asJava)
 
      KafkaSpecHelper.createOrTruncateTopic(setup.adminClient, topic, 1, 1)
@@ -55,9 +55,9 @@ class JsonProducerSpec extends SpecBase {
   "must produce data to CCloud" in {
 
     val setup: ClientSetup = ClientSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
-    val producer = new KafkaProducer[String, MyRecord](setup.commonProps, Serdes.String().serializer(), jsonSerializer)
+    val producer = new KafkaProducer[String, MyRecord](setup.commonProps, Serdes.String().serializer(), myRecordSerializer)
     setup.commonProps.put(ConsumerConfig.GROUP_ID_CONFIG, cGroup)
-    val consumer = new KafkaConsumer[String, MyRecord](setup.commonProps, Serdes.String().deserializer(), jsonDeserializer)
+    val consumer = new KafkaConsumer[String, MyRecord](setup.commonProps, Serdes.String().deserializer(), myRecordDeserializer)
     consumer.subscribe(List(topic).asJava)
 
     KafkaSpecHelper.createOrTruncateTopic(setup.adminClient, topic, 1)

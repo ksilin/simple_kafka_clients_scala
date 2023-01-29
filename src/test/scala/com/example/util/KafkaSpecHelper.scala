@@ -29,7 +29,7 @@ object KafkaSpecHelper extends LogSupport with FutureConverter {
   ): Either[String, String] = {
     val needsCreation = skipExistanceCheck || !doesTopicExist(adminClient, topicName)
     if (needsCreation) {
-      debug(s"Creating topic ${topicName}")
+      info(s"Creating topic ${topicName}")
 
       val configs: Map[String, String] =
         if (replicationFactor < 3) Map(TopicConfig.MIN_IN_SYNC_REPLICAS_CONFIG -> "1")
@@ -42,11 +42,11 @@ object KafkaSpecHelper extends LogSupport with FutureConverter {
           adminClient.createTopics(Collections.singleton(newTopic))
         val resF = toScalaFuture(topicsCreationResult.all())
         Await.result(resF, timeoutMs.millis)
-        debug(s"successfully created topic $topicName")
+        info(s"successfully created topic $topicName")
         Right(s"successfully created topic $topicName")
       } catch {
         case e: Throwable =>
-          debug(s"failed to create topic $topicName: $e")
+          info(s"failed to create topic $topicName: $e")
           Left(e.getMessage)
       }
     } else {
@@ -65,9 +65,11 @@ object KafkaSpecHelper extends LogSupport with FutureConverter {
   ): Any =
     if (doesTopicExist(adminClient, topicName)) {
       println(s"truncating topic $topicName")
+      info(s"truncating topic $topicName")
       truncateTopic(adminClient, topicName, numberOfPartitions, replicationFactor)
     } else {
       println(s"creating topic $topicName")
+      info(s"creating topic $topicName")
       createTopic(
         adminClient,
         topicName,
@@ -151,7 +153,7 @@ object KafkaSpecHelper extends LogSupport with FutureConverter {
 
           info(
             s"${r.topic()} | ${r.partition()} | ${r.offset()} : ${r.value().getClass} | ${r
-              .key()} | ${r.value()}"
+              .key()} | ${r.value()} | ${r.headers().asScala.mkString("|")}"
           )
         }
       },
