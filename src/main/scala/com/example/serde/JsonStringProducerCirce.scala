@@ -1,6 +1,11 @@
 package com.example.serde
 import java.util.Properties
-import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord, RecordMetadata}
+import org.apache.kafka.clients.producer.{
+  KafkaProducer,
+  ProducerConfig,
+  ProducerRecord,
+  RecordMetadata
+}
 import io.circe._
 import io.circe.syntax._
 import org.apache.kafka.common.header.Headers
@@ -10,13 +15,13 @@ import wvlet.log.LogSupport
 import java.util.concurrent.Future
 
 case class JsonStringProducerCirce[K, V](
-                                     clientProperties: Properties,
-                                     topic: String = "testTopic",
-                                     clientId: String = "JsonStringProducerCirce"
-                                   )(implicit e: Encoder[V])
-  extends LogSupport {
+    clientProperties: Properties,
+    topic: String = "testTopic",
+    clientId: String = "JsonStringProducerCirce"
+)(implicit e: Encoder[V])
+    extends LogSupport {
 
-  val producerProperties = new Properties()
+  private val producerProperties = new Properties()
   producerProperties.putAll(clientProperties)
   producerProperties.put(ProducerConfig.ACKS_CONFIG, "all")
   producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true")
@@ -29,15 +34,23 @@ case class JsonStringProducerCirce[K, V](
 
   val producer = new KafkaProducer[K, String](producerProperties)
 
-  def makeRecords(recordMap: Iterable[(K, V)], headers: Iterable[(String, Array[Byte])] = Nil): Iterable[ProducerRecord[K, String]] =
+  def makeRecords(
+      recordMap: Iterable[(K, V)],
+      headers: Iterable[(String, Array[Byte])] = Nil
+  ): Iterable[ProducerRecord[K, String]] =
     recordMap.map { case (k, v) => makeRecord(k, v, headers) }
 
-  def makeRecord(key: K, value: V, headerData: Iterable[(String, Array[Byte])] = Nil): ProducerRecord[K, String] = {
-    val v = if(null == value) null else  value.asJson.noSpaces
-    val r = new ProducerRecord[K, String](topic, key, v)
+  def makeRecord(
+      key: K,
+      value: V,
+      headerData: Iterable[(String, Array[Byte])] = Nil
+  ): ProducerRecord[K, String] = {
+    val v                = if (null == value) null else value.asJson.noSpaces
+    val r                = new ProducerRecord[K, String](topic, key, v)
     val headers: Headers = r.headers()
-    headerData foreach { case (name, value) =>
-      headers.add(name, value)
+    headerData foreach {
+      case (name, value) =>
+        headers.add(name, value)
     }
     r
   }
@@ -53,12 +66,15 @@ case class JsonStringProducerCirce[K, V](
     info(s"produced ${res.topic()}, | ${res.partition()} | ${res.offset()} | ${res.timestamp()}")
   }
 
-  def produceAsync(key: K, value: V, headers: Iterable[(String, Array[Byte])] = Nil): Future[RecordMetadata] = {
+  def produceAsync(
+      key: K,
+      value: V,
+      headers: Iterable[(String, Array[Byte])] = Nil
+  ): Future[RecordMetadata] = {
     val r = makeRecord(key, value, headers)
     info(s"producing $r")
-    producer.send(r)//((recordMetadata, exception)
+    producer.send(r) // ((recordMetadata, exception)
   }
-
 
   def produceString(msgs: Iterable[ProducerRecord[K, String]], sendDelayMs: Int = 0): Unit =
     msgs foreach { r =>
@@ -71,4 +87,3 @@ case class JsonStringProducerCirce[K, V](
       produce(r._1, r._2, r._3)
     }
 }
-
