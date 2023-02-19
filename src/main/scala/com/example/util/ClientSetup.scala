@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package com.example.serde;
+package com.example.util
 
-import com.google.gson.Gson;
-import org.apache.kafka.common.serialization.Serializer;
+import org.apache.kafka.clients.admin.AdminClient
 
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.net.URL
+import java.util.Properties
 
-public class GsonSerializer <T> implements Serializer<T> {
+case class ClientSetup(configFileUrl: Option[URL] = None, configPath: Option[String] = None) {
 
-    private final Gson gson = new Gson();
-
-    @Override
-    public void configure(Map<String, ?> map, boolean b) {
-    }
-
-    @Override
-    public byte[] serialize(String topic, T t) {
-        return gson.toJson(t).getBytes(StandardCharsets.UTF_8);
-    }
-
-    @Override
-    public void close() {
-    }
+  val clientProps              = ClientProps.create(configFileUrl, configPath)
+  val commonProps: Properties  = clientProps.clientProps
+  val adminClient: AdminClient = AdminClient.create(commonProps)
 }

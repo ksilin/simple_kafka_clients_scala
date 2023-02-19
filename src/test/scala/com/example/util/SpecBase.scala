@@ -1,7 +1,7 @@
 package com.example.util
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.serialization.{Deserializer, Serdes}
+import org.apache.kafka.common.serialization.{ Deserializer, Serdes }
 import org.scalatest.freespec.AnyFreeSpecLike
 import org.scalatest.matchers.must.Matchers
 import wvlet.log.LogSupport
@@ -10,7 +10,11 @@ import scala.jdk.CollectionConverters._
 
 class SpecBase extends AnyFreeSpecLike with LogSupport with Matchers {
 
-  def makeTypedConsumer[V](setup: ClientSetup, topic: String, deserializer: Deserializer[V]): KafkaConsumer[String, V] = {
+  def makeTypedConsumer[V](
+      setup: ClientSetup,
+      topic: String,
+      deserializer: Deserializer[V]
+  ): KafkaConsumer[String, V] = {
     val consumer = new KafkaConsumer[String, V](
       setup.commonProps,
       Serdes.String().deserializer(),

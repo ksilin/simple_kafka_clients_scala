@@ -24,7 +24,7 @@ class JsonStringProducerCirceSpec extends SpecBase {
     new WrapperSerde(myRecordSerializer, myRecordDeserializer)
 
   val prefix: String = suiteName
-  val topic          = s"${prefix}_testTopic"
+  val topic          = s"jsonTest" // "${prefix}_testTopic"
   val cGroup         = s"${prefix}_cGroup"
 
   "must produce data to CCloud" in {
@@ -33,9 +33,16 @@ class JsonStringProducerCirceSpec extends SpecBase {
     val setup: ClientSetup = ClientSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
     val producer           = new JsonStringProducerCirce[String, MyRecord](setup.commonProps, topic)
 
-    setup.commonProps.put(ConsumerConfig.GROUP_ID_CONFIG, cGroup + Random.alphanumeric.take(3).mkString)
-    val consumer: KafkaConsumer[String, MyRecord] = makeTypedConsumer(setup, topic, myRecordDeserializer)
-    setup.commonProps.put(ConsumerConfig.GROUP_ID_CONFIG, cGroup + Random.alphanumeric.take(3).mkString)
+    setup.commonProps.put(
+      ConsumerConfig.GROUP_ID_CONFIG,
+      cGroup + Random.alphanumeric.take(3).mkString
+    )
+    val consumer: KafkaConsumer[String, MyRecord] =
+      makeTypedConsumer(setup, topic, myRecordDeserializer)
+    setup.commonProps.put(
+      ConsumerConfig.GROUP_ID_CONFIG,
+      cGroup + Random.alphanumeric.take(3).mkString
+    )
     val stringConsumer: KafkaConsumer[String, String] = makeStringConsumer(setup, topic)
 
     KafkaSpecHelper.createOrTruncateTopic(setup.adminClient, topic, 1, 3)
@@ -53,17 +60,11 @@ class JsonStringProducerCirceSpec extends SpecBase {
     KafkaSpecHelper.fetchAndProcessRecords(stringConsumer)
   }
 
-  "must be able to deal with Options" in {
+  "must be able to deal with Options" in {}
 
-  }
+  "must be able to deal with Either" in {}
 
-  "must be able to deal with Either" in {
-
-  }
-
-  "must be able to deal with DateTime" in {
-
-  }
+  "must be able to deal with DateTime" in {}
 
   private def makeRecordTuples(
       keys: Seq[String],

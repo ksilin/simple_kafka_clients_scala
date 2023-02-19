@@ -1,8 +1,6 @@
-# producers #
+# simple_kafka_clients_scala #
 
-sometimes, you need to produce some data to your Kafka cluster quickly. This project is intended as a reference for seom of the many ways to do so
-
-* kafka-avro-console-producer
+sometimes, you need to produce and consume some data with your Kafka cluster quickly. This project is intended as a reference for some of the many ways to do so.
 
 ## Contribution policy ##
 

@@ -1,8 +1,13 @@
 package com.example.util
 
 import com.example.util.FutureConverter.toScalaFuture
-import org.apache.kafka.clients.admin.{AdminClient, CreateTopicsResult, DeleteTopicsResult, NewTopic}
-import org.apache.kafka.clients.consumer.{Consumer, ConsumerRecord, ConsumerRecords}
+import org.apache.kafka.clients.admin.{
+  AdminClient,
+  CreateTopicsResult,
+  DeleteTopicsResult,
+  NewTopic
+}
+import org.apache.kafka.clients.consumer.{ Consumer, ConsumerRecord, ConsumerRecords }
 import org.apache.kafka.common.config.TopicConfig
 import wvlet.log.LogSupport
 
@@ -153,7 +158,7 @@ object KafkaSpecHelper extends LogSupport with FutureConverter {
 
           info(
             s"${r.topic()} | ${r.partition()} | ${r.offset()} : ${r.value().getClass} | ${r
-              .key()} | ${r.value()} | ${r.headers().asScala.mkString("|")}"
+                .key()} | ${r.value()} | ${r.headers().asScala.mkString("|")}"
           )
         }
       },
