@@ -22,27 +22,23 @@ public class HeaderBytesPrinterOptions {
     @CommandLine.Option(names = "-t", description = "topic")
     String topic;
 
-    @CommandLine.Option(names = "-p", description = "partition")
-    String partition;
-
     @CommandLine.Option(names = { "-c", "--config-file" }, description = "the consumer config file")
     String configFile;
 
 
-    @CommandLine.Option(names = "-s", description = "printStrings")
-    boolean printStrings;
+    @CommandLine.Option(names = "-d", description = "printDecimalBytes")
+    boolean printDecimalBytes;
 
-    @CommandLine.Option(names = { "-h", "--help" }, usageHelp = true, description = "display a help message")
-    private boolean helpRequested;
+    @CommandLine.Option(names = "-h", description = "printHexBytes")
+    boolean printHexBytes;
 
     @Override
     public String toString() {
         return "HeaderBytesPrinterOptions{" +
                 "topic='" + topic + '\'' +
-                ", partition='" + partition + '\'' +
                 ", configFile='" + configFile + '\'' +
-                ", printStrings=" + printStrings +
-                ", helpRequested=" + helpRequested +
+                ", printDecimalBytes=" + printDecimalBytes +
+                ", printHexBytes=" + printHexBytes +
                 '}';
     }
 }

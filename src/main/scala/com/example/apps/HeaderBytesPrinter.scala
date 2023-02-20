@@ -45,21 +45,17 @@ case object HeaderBytesPrinter extends App with LogSupport {
 
   // while you can pass java array to varargs method, you need to splat a scala array
   new CommandLine(cliOptions).parseArgs(args: _*)
-  println("options:")
-  println(cliOptions)
+  // println(cliOptions)
 
   val configFileName = cliOptions.configFile
   val topicName      = cliOptions.topic
 
   val overrideProps: Properties = buildProperties(configFileName)
 
-  // val setup: ClientSetup = ClientSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
   val consumerProps = new Properties()
-  // consumerProps.putAll(setup.commonProps)
   consumerProps.putAll(overrideProps)
 
   private val runnable: Runnable = () => {
-    var map = Map.empty[String, Int]
     val listener = new ConsumerRebalanceListener {
       override def onPartitionsRevoked(partitions: util.Collection[TopicPartition]): Unit =
         logger info s"The following partition are revoked: ${partitions.asScala.mkString(", ")}"
@@ -76,7 +72,7 @@ case object HeaderBytesPrinter extends App with LogSupport {
     consumer.subscribe((topicName :: Nil).asJava, listener)
 
     while (!scheduler.isShutdown) {
-      Thread.sleep(2000)
+      Thread.sleep(100)
       println("polling...")
       val records: ConsumerRecords[Array[Byte], Array[Byte]] = consumer.poll(Duration.ofSeconds(1))
       val r: List[ConsumerRecord[Array[Byte], Array[Byte]]]  = records.asScala.toList
@@ -85,25 +81,40 @@ case object HeaderBytesPrinter extends App with LogSupport {
         val partition = record.partition()
         val offset    = record.offset()
         val key       = record.key().mkString
-        val headerBytes =
-          record.headers().asScala.map(h => s"${h.key()}:${h.value().mkString(",")}").mkString("\n")
-        println(s"headers for $partition:$offset:$key:")
-        println(headerBytes)
-        if (cliOptions.printStrings) {
-          val headerStrings =
+        println(s"headers for $partition:$offset:$key")
+        val headerStrings =
+          record
+            .headers()
+            .asScala
+            .map(h => s"${h.key()} : ${new String(h.value(), StandardCharsets.UTF_8)}")
+            .mkString("\n")
+        println(headerStrings)
+        if (cliOptions.printDecimalBytes) {
+          println("decimal bytes:")
+          val headerBytes =
             record
               .headers()
               .asScala
-              .map(h => s"${h.key()}:${new String(h.value(), StandardCharsets.UTF_8)}")
+              .map(h => s"${h.key()} : ${h.value().mkString(" ")}")
               .mkString("\n")
-          println(headerStrings)
+          println(headerBytes)
+        }
+        if (cliOptions.printHexBytes) {
+          println("hex bytes:")
+          val headerHex2 =
+            record
+              .headers()
+              .asScala
+              .map(h => s"${h.key()} : ${toHex(h.value())}")
+              .mkString("\n")
+          println(headerHex2)
         }
         println("---")
       }
     }
 
     println()
-    logger warn s"Closing the the first consumer n°2 now!"
+    logger warn s"Closing the consumer now"
     Try(consumer.close())
       .recover { case error => logger.error("Failed to close the kafka consumer", error) }
   }
@@ -115,11 +126,16 @@ case object HeaderBytesPrinter extends App with LogSupport {
     scheduler.awaitTermination(10, TimeUnit.SECONDS)
   }
 
-  def buildProperties(configFileName: String): Properties = {
+  private def toHex(bytes: Seq[Byte]): String =
+    (bytes map { b =>
+      String.format("%02x", b)
+    }).mkString(" ")
+
+  private def buildProperties(configFileName: String): Properties = {
     val properties = new Properties()
     properties.put(
       ConsumerConfig.GROUP_ID_CONFIG,
-      "scala_example_group_" + Random.alphanumeric.take(5).mkString
+      "header_bytes_printer_group_" + Random.alphanumeric.take(10).mkString
     )
     properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
     properties.load(new FileReader(configFileName))
