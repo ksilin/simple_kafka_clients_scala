@@ -10,14 +10,16 @@ inThisBuild(
     version          := "0.0.1",
     startYear        := Some(2022),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
-    scalaVersion := "2.13.9",
-    // assembly / assemblyJarName := "utils.jar",
-    // assembly / assemblyMergeStrategy := {
-    //  case PathList("module-info.class") => MergeStrategy.deduplicate
-    // case PathList("META-INF", "versions", xs @ _, "module-info.class") => MergeStrategy.last
-    //  case _ => MergeStrategy.preferProject
-    // },
-    // assembly / mainClass := Some("com.example.apps.HeaderBytesPrinter"),
+    scalaVersion               := "2.13.9",
+    mainClass                  := Some("com.example.apps.HeaderBytesPrinter"),
+    assembly / assemblyJarName := "utils.jar",
+    assembly / assemblyMergeStrategy := {
+      // case PathList("module-info.class") => MergeStrategy.deduplicate
+      case PathList("META-INF", "versions", xs @ _, "module-info.class") => MergeStrategy.discard
+      case PathList("META-INF", xs @ _)                                  => MergeStrategy.discard
+      case _                                                             => MergeStrategy.first
+    },
+    assembly / mainClass := Some("com.example.apps.HeaderBytesPrinter"),
     scalacOptions ++= Seq(
       "-deprecation",
       "-unchecked",
