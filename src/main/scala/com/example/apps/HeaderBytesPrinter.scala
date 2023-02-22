@@ -39,30 +39,32 @@ import scala.util.{ Random, Try }
 
 case object HeaderBytesPrinter extends App with LogSupport {
 
-  val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+  private val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 
-  val cliOptions: HeaderBytesPrinterOptions = new HeaderBytesPrinterOptions()
+  private val cliOptions: HeaderBytesPrinterOptions = new HeaderBytesPrinterOptions()
 
   // while you can pass java array to varargs method, you need to splat a scala array
   new CommandLine(cliOptions).parseArgs(args: _*)
   // println(cliOptions)
 
-  val configFileName = cliOptions.configFile
+  private val configFileName = cliOptions.configFile
   val topicName      = cliOptions.topic
 
-  val overrideProps: Properties = buildProperties(configFileName)
+  private val overrideProps: Properties = buildProperties(configFileName)
 
-  val consumerProps = new Properties()
+  private val consumerProps = new Properties()
   consumerProps.putAll(overrideProps)
 
-  private val runnable: Runnable = () => {
-    val listener = new ConsumerRebalanceListener {
-      override def onPartitionsRevoked(partitions: util.Collection[TopicPartition]): Unit =
-        logger info s"The following partition are revoked: ${partitions.asScala.mkString(", ")}"
+  val listener = new ConsumerRebalanceListener {
+    override def onPartitionsRevoked(partitions: util.Collection[TopicPartition]): Unit =
+      logger info s"The following partition are revoked: ${partitions.asScala.mkString(", ")}"
 
-      override def onPartitionsAssigned(partitions: util.Collection[TopicPartition]): Unit =
-        logger info s"The following partition are assigned: ${partitions.asScala.mkString(", ")}"
-    }
+    override def onPartitionsAssigned(partitions: util.Collection[TopicPartition]): Unit =
+      logger info s"The following partition are assigned: ${partitions.asScala.mkString(", ")}"
+  }
+
+
+  private val runnable: Runnable = () => {
 
     val consumer = new KafkaConsumer[Array[Byte], Array[Byte]](
       consumerProps,
@@ -112,8 +114,6 @@ case object HeaderBytesPrinter extends App with LogSupport {
         println("---")
       }
     }
-
-    println()
     logger warn s"Closing the consumer now"
     Try(consumer.close())
       .recover { case error => logger.error("Failed to close the kafka consumer", error) }
