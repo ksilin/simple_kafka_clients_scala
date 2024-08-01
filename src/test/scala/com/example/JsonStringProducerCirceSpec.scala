@@ -1,7 +1,7 @@
 package com.example
 
 import com.example.serde.JsonStringProducerCirce
-import com.example.util.{ ClientSetup, KafkaSpecHelper, SpecBase }
+import com.example.util.{ ClientConnectionSetup, KafkaSpecHelper, SpecBase }
 import org.apache.kafka.clients.consumer.{ ConsumerConfig, KafkaConsumer }
 import org.apache.kafka.common.serialization.{ Deserializer, Serializer }
 import org.apache.kafka.common.serialization.Serdes.WrapperSerde
@@ -30,7 +30,7 @@ class JsonStringProducerCirceSpec extends SpecBase {
   "must produce data to CCloud" in {
 
     // val setup: ClientSetup = ClientSetup(configPath = Some("local"))
-    val setup: ClientSetup = ClientSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
+    val setup: ClientConnectionSetup = ClientConnectionSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
     val producer           = new JsonStringProducerCirce[String, MyRecord](setup.commonProps, topic)
 
     setup.commonProps.put(

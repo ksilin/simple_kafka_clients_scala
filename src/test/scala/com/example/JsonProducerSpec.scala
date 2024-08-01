@@ -2,7 +2,7 @@ package com.example
 
 import com.example.serde.{ GsonDeserializer, GsonSerializer }
 import com.example.util.FutureConverter.toScalaFuture
-import com.example.util.{ ClientSetup, KafkaSpecHelper, SpecBase }
+import com.example.util.{ ClientConnectionSetup, KafkaSpecHelper, SpecBase }
 import org.apache.kafka.clients.consumer.{ ConsumerConfig, KafkaConsumer }
 import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerRecord, RecordMetadata }
 import org.apache.kafka.common.serialization.Serdes
@@ -33,7 +33,7 @@ class JsonProducerSpec extends SpecBase {
   // assumes local broker accessible on 29092
   "must produce data locally" in {
 
-    val setup: ClientSetup = ClientSetup(configPath = Some("local"))
+    val setup: ClientConnectionSetup = ClientConnectionSetup(configPath = Some("local"))
     val producer = new KafkaProducer[String, MyRecord](
       setup.commonProps,
       Serdes.String().serializer(),
@@ -63,7 +63,7 @@ class JsonProducerSpec extends SpecBase {
   // CREATE STREAM collector (name String, description String, timestamp BIGINT) WITH (kafka_topic = 'JsonProducerSpec_testTopic', value_format = 'JSON');
   "must produce data to CCloud" in {
 
-    val setup: ClientSetup = ClientSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
+    val setup: ClientConnectionSetup = ClientConnectionSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
     val producer = new KafkaProducer[String, MyRecord](
       setup.commonProps,
       Serdes.String().serializer(),

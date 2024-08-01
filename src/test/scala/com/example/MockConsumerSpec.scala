@@ -1,23 +1,29 @@
 package com.example
 
 import com.example.util.SpecBase
-import org.apache.kafka.clients.consumer.{ConsumerRecord, ConsumerRecords, MockConsumer, OffsetResetStrategy}
+import org.apache.kafka.clients.consumer.{
+  ConsumerRecord,
+  ConsumerRecords,
+  MockConsumer,
+  OffsetResetStrategy
+}
 import org.apache.kafka.common.TopicPartition
 
 import java.lang
 import java.time.Duration
-import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
+import java.util.concurrent.{ Executors, ScheduledExecutorService, TimeUnit }
 import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 class MockConsumerSpec extends SpecBase {
 
   val prefix: String = suiteName
-  val topic = s"${prefix}_testTopic"
+  val topic          = s"${prefix}_testTopic"
 
   "must produce and consume data with mock clients" in {
 
-    val consumer: MockConsumer[String, String] = new MockConsumer[String, String](OffsetResetStrategy.EARLIEST)
+    val consumer: MockConsumer[String, String] =
+      new MockConsumer[String, String](OffsetResetStrategy.EARLIEST)
 
     val tp: TopicPartition = new TopicPartition(topic, 0)
 

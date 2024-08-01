@@ -10,7 +10,7 @@ inThisBuild(
     version          := "0.0.1",
     startYear        := Some(2022),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
-    scalaVersion := "2.13.9",
+    scalaVersion := "2.13.14",
     // mainClass                  := Some("com.example.apps.HeaderBytesPrinter"),
     // assembly / assemblyJarName := "utils.jar",
     assembly / assemblyMergeStrategy := {
@@ -47,7 +47,7 @@ inThisBuild(
 lazy val simple_kafka_clients_scala =
   project
     .in(file("."))
-    .enablePlugins(AutomateHeaderPlugin, JavaAppPackaging)
+    .enablePlugins(JavaAppPackaging)
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
@@ -87,16 +87,16 @@ lazy val commonSettings =
 lazy val library =
   new {
     object Version {
-      val kafka       = "3.4.0"
+      val kafka       = "3.7.1"
       val betterFiles = "3.9.2"
-      val airframeLog = "21.12.1"
+      val airframeLog = "24.7.1"
       val config      = "1.4.2"
-      val gson        = "2.10.1"
+      val gson        = "2.11.0"
       val circeKafka  = "3.3.1"
-      val circe       = "0.14.4"
-      val picoCli     = "4.7.1"
-      val logback     = "1.3.5"
-      val scalatest   = "3.2.15"
+      val circe       = "0.14.9"
+      val picoCli     = "4.7.6"
+      val logback     = "1.5.6"
+      val scalatest   = "3.2.19"
     }
 
     val clients      = "org.apache.kafka"      % "kafka-clients" % Version.kafka

@@ -11,9 +11,9 @@ import scala.jdk.CollectionConverters._
 class SpecBase extends AnyFreeSpecLike with LogSupport with Matchers {
 
   def makeTypedConsumer[V](
-      setup: ClientSetup,
-      topic: String,
-      deserializer: Deserializer[V]
+                            setup: ClientConnectionSetup,
+                            topic: String,
+                            deserializer: Deserializer[V]
   ): KafkaConsumer[String, V] = {
     val consumer = new KafkaConsumer[String, V](
       setup.commonProps,
@@ -24,7 +24,7 @@ class SpecBase extends AnyFreeSpecLike with LogSupport with Matchers {
     consumer
   }
 
-  def makeStringConsumer(setup: ClientSetup, topic: String): KafkaConsumer[String, String] = {
+  def makeStringConsumer(setup: ClientConnectionSetup, topic: String): KafkaConsumer[String, String] = {
     val consumer = new KafkaConsumer[String, String](
       setup.commonProps,
       Serdes.String().deserializer(),

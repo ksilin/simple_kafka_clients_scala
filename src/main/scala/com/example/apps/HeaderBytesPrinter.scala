@@ -48,7 +48,7 @@ case object HeaderBytesPrinter extends App with LogSupport {
   // println(cliOptions)
 
   private val configFileName = cliOptions.configFile
-  val topicName      = cliOptions.topic
+  val topicName              = cliOptions.topic
 
   private val overrideProps: Properties = buildProperties(configFileName)
 
@@ -62,7 +62,6 @@ case object HeaderBytesPrinter extends App with LogSupport {
     override def onPartitionsAssigned(partitions: util.Collection[TopicPartition]): Unit =
       logger info s"The following partition are assigned: ${partitions.asScala.mkString(", ")}"
   }
-
 
   private val runnable: Runnable = () => {
 

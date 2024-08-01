@@ -25,7 +25,7 @@ import org.apache.kafka.common.config.{ SaslConfigs, SslConfigs }
 import java.net.URL
 import java.util.Properties
 
-case class ClientProps(
+case class ClientConnectionProps(
     bootstrapServer: String,
     apiKey: Option[String],
     apiSecret: Option[String],
@@ -48,21 +48,21 @@ case class ClientProps(
   }
 }
 
-case object ClientProps {
+case object ClientConnectionProps {
 
   val prefix = "kafka"
 
   def create(
       configFileUrl: Option[URL] = None,
       configPath: Option[String] = None
-  ): ClientProps = {
+  ): ClientConnectionProps = {
     val topLevelConfig = configFileUrl.fold(ConfigFactory.load())(ConfigFactory.parseURL)
     val config = configPath.map(path => topLevelConfig.getConfig(path)).getOrElse(topLevelConfig)
     fromConfig(config)
   }
 
-  def fromConfig(config: Config): ClientProps =
-    ClientProps(
+  def fromConfig(config: Config): ClientConnectionProps =
+    ClientConnectionProps(
       config.getString(s"${prefix}.bootstrap"),
       if (config.hasPath(s"${prefix}.key")) Some(config.getString(s"${prefix}.key")) else None,
       if (config.hasPath(s"${prefix}.secret")) Some(config.getString(s"${prefix}.secret"))
