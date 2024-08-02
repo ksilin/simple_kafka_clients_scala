@@ -30,8 +30,9 @@ class JsonStringProducerCirceSpec extends SpecBase {
   "must produce data to CCloud" in {
 
     // val setup: ClientSetup = ClientSetup(configPath = Some("local"))
-    val setup: ClientConnectionSetup = ClientConnectionSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
-    val producer           = new JsonStringProducerCirce[String, MyRecord](setup.commonProps, topic)
+    val setup: ClientConnectionSetup =
+      ClientConnectionSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
+    val producer = new JsonStringProducerCirce[String, MyRecord](setup.commonProps, topic)
 
     setup.commonProps.put(
       ConsumerConfig.GROUP_ID_CONFIG,

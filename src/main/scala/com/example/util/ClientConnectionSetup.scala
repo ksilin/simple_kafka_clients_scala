@@ -21,7 +21,10 @@ import org.apache.kafka.clients.admin.AdminClient
 import java.net.URL
 import java.util.Properties
 
-case class ClientConnectionSetup(configFileUrl: Option[URL] = None, configPath: Option[String] = None) {
+case class ClientConnectionSetup(
+    configFileUrl: Option[URL] = None,
+    configPath: Option[String] = None
+) {
 
   val clientProps              = ClientConnectionProps.create(configFileUrl, configPath)
   val commonProps: Properties  = clientProps.clientProps

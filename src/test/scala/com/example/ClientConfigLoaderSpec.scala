@@ -1,14 +1,14 @@
 package com.example
 
-import com.example.util.{ClientConfigLoader, SpecBase}
+import com.example.util.{ ClientConfigLoader, SpecBase }
 import scala.jdk.CollectionConverters._
 
 class ClientConfigLoaderSpec extends SpecBase {
 
   "must load configs for producers and consumers according to given profile" in {
 
-    val profile = sys.env.getOrElse("PROFILE", "prod") // default to "local"
-    val config = ClientConfigLoader.loadConfig(profile)
+    val profile        = sys.env.getOrElse("PROFILE", "prod") // default to "local"
+    val config         = ClientConfigLoader.loadConfig(profile)
     val producerConfig = ClientConfigLoader.getProducerConfig(config)
     val consumerConfig = ClientConfigLoader.getConsumerConfig(config)
 

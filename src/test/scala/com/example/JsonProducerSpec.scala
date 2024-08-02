@@ -63,7 +63,8 @@ class JsonProducerSpec extends SpecBase {
   // CREATE STREAM collector (name String, description String, timestamp BIGINT) WITH (kafka_topic = 'JsonProducerSpec_testTopic', value_format = 'JSON');
   "must produce data to CCloud" in {
 
-    val setup: ClientConnectionSetup = ClientConnectionSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
+    val setup: ClientConnectionSetup =
+      ClientConnectionSetup(configPath = Some("ccloud.ps.ksilin.dedicated_ksilin"))
     val producer = new KafkaProducer[String, MyRecord](
       setup.commonProps,
       Serdes.String().serializer(),
